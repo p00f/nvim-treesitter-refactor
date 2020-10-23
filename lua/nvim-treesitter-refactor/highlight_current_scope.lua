@@ -22,6 +22,19 @@ function M.highlight_current_scope(bufnr)
   end
 end
 
+function M.sign_current_scope(bufnr)
+  M.clear_highlights(bufnr)
+
+  local node_at_point = ts_utils.get_node_at_cursor()
+  local current_scope = locals.containing_scope(node_at_point, bufnr)
+
+  local start_line = current_scope:start()
+
+  if current_scope and start_line ~= 0 then
+    ts_utils.node_sign_column(current_scope, bufnr)
+  end
+end
+
 function M.clear_highlights(bufnr)
   api.nvim_buf_clear_namespace(bufnr, current_scope_namespace, 0, -1)
 end
